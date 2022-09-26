@@ -1,0 +1,111 @@
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.forms {
+	background: #fff;
+	box-shadow: 0 0 3px #000;
+	margin: 30px auto;
+	max-width: 500px;
+	overflow: hidden;
+	position: relative;
+	padding: 0;
+	border-radius: 20px;
+}
+.forms h1 {
+	padding: 0 0 20px 0;
+	font-size: 26px;
+	font-weight: lighter;
+	text-align: center;
+}
+.forms form { padding: 30px; }
+#signup { display: none; }
+.forms .tab-group {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.forms .tab-group:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.forms .tab-group li {
+	display: block;
+	text-decoration: none;
+	padding: 15px;
+	background: #e5e6e7;
+	font-size: 20px;
+	float: left;
+	width: 50%;
+	text-align: center;
+	border-top: 3px solid transparent;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-webkit-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+}
+
+.forms .tab-group .active {
+	background: #fff;
+	border-top: 3px solid #FD2D01;
+}
+.forms input {
+	font-size: 16px;
+	display: block;
+	width: 100%;
+	padding: 10px 20px;
+	border: 1px solid #ddd;
+	color: #666;
+	border-radius: 0;
+	margin-bottom: 10px;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-webkit-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+	border-radius: 20px;
+}
+.forms input:focus {
+	outline: 0;
+	border-color: #FD2D01;
+}
+.forms label {
+	font-size: 16px;
+	font-weight: normal;
+	margin-bottom: 5px;
+	display: block;
+}
+.forms .button {
+	border: 0;
+	outline: none;
+	border-radius: 0;
+	padding: 10px 0;
+	font-size: 18px;
+	font-weight: 300;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	background: #FD2D01;
+	color: #ffffff;
+	cursor: pointer;
+	-moz-transition: all 0.4s ease-in-out;
+	-o-transition: all 0.4s ease-in-out;
+	-webkit-transition: all 0.4s ease-in-out;
+	transition: all 0.4s ease-in-out;
+}
+.forms .button:hover, .button:focus { background: #FD2D01; }
+.text-p { text-align: right; }
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+img {
+	object-fit: cover;
+	width: 100%;
+	height: 100px;
+}

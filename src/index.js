@@ -5,7 +5,7 @@ import './components/Home/Banner';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import reportWebVitals from './reportWebVitals';
-import theme from './themes/Theme'
+import theme from './services/themes/Theme'
 import { BrowserRouter, Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@mui/material';
 
@@ -18,6 +18,7 @@ root.render(
           <Route path='/login' element={<Login />} />
           <Route path='/' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

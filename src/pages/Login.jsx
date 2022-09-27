@@ -25,7 +25,7 @@ function Login() {
                     <input type="email" name="email" required="email" {...register('email')}/>
                     <label for="password">Mot de passe</label>
                     <input type="password" name="password" required {...register('password')} />
-                    <Button className="submitButton" type="submit" variant="contained">Se connecter</Button>
+                    <Button style={{ borderRadius: 20 }} className="submitButton" type="submit" variant="contained">Se connecter</Button>
                 </div>
             </form>
         </div>

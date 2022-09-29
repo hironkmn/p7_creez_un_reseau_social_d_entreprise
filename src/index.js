@@ -4,6 +4,7 @@ import './index.css';
 import './components/Home/Banner';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Home from './pages/Home'
 import reportWebVitals from './reportWebVitals';
 import theme from './services/themes/Theme'
 import { BrowserRouter, Router, Route, Routes } from 'react-router-dom'
@@ -18,7 +19,7 @@ root.render(
           <Route path='/login' element={<Login />} />
           <Route path='/' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          
+          <Route path='/home' element={<Home/>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import './Login.css'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import logo from '../assets/icon-left-font.png'
 
@@ -8,28 +8,22 @@ function Login() {
     const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const onSubmit = async (d) => {
-        let response = await fetch('http://localhost:3000/api/auth', {
+        let response = await fetch('http://localhost:3000/api/auth/login', {
             method: 'POST',
-            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept' : 'application/json'
           },
             body: JSON.stringify(d)
         })
-        .then((reponse1) => reponse1.json())
-        .then((d) => {
-            console.log('Success:', d)
-        })
-        .catch((error) => {
-            console.log('error:', d)
-        })
+
         if(response.status==200){
             navigate('/home')
         }
     }
     return (
-        <div class="forms">
-            <ul class="tab-group">
+        <div className="forms">
+            <ul className="tab-group">
                 <li className="tab active"><Link to='/login'>Se connecter</Link></li>
                 <li className="tab"><Link to="/signup">S'inscrire</Link></li>
             </ul>

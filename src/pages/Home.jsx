@@ -1,13 +1,10 @@
-
+import Banner from "../components/Home/Banner";
+import Burger from "../components/Home/Burger"
 
 function Home () {
 
-
-
     return(
-        <div>
-            Bonjour
-        </div>
+        <Burger pageWrapId= {'page-wrap'} outerContainerId={'out-container'}/>
     )
 }
 

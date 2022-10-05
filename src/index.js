@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import './components/Home/Banner';
+import './components/Home/ResponsiveAppBar';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home'

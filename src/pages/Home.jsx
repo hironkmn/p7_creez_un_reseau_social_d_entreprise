@@ -1,10 +1,16 @@
-import Banner from "../components/Home/Banner";
+import ButtonAppBar from "../components/Home/AppBar";
 import Burger from "../components/Home/Burger"
+import React from "react";
+import AddPost from "../components/Home/AddPost";
 
-function Home () {
+function Home() {
 
-    return(
-        <Burger pageWrapId= {'page-wrap'} outerContainerId={'out-container'}/>
+    return (
+        <div>
+            <Burger pageWrapId={'page-wrap'} outerContainerId={'out-container'} />
+            <ButtonAppBar />
+            <AddPost />
+        </div>
     )
 }
 

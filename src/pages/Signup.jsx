@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import logo from '../assets/icon-left-font.png'
 import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
+import React from "react";
 
 function Signup() {
     const navigate = useNavigate()

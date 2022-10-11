@@ -3,6 +3,9 @@ import './Login.css'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import logo from '../assets/icon-left-font.png'
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import React from 'react'
 
 function Login() {
     const navigate = useNavigate()
@@ -12,12 +15,12 @@ function Login() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept' : 'application/json'
-          },
+                'Accept': 'application/json'
+            },
             body: JSON.stringify(d)
         })
 
-        if(response.status==200){
+        if (response.status == 200) {
             navigate('/home')
         }
     }
@@ -28,17 +31,17 @@ function Login() {
                 <li className="tab"><Link to="/signup">S'inscrire</Link></li>
             </ul>
             <form id="login" onSubmit={handleSubmit(onSubmit)}>
-                <img src={logo} alt='logo groupomania'/>
+                <img src={logo} alt='logo groupomania' />
                 <div className="input-field">
-                    <label htmlFor="email">Email</label>
-                    <input type="email" name="email" required="email" {...register('email')}/>
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password" name="password" required {...register('password')} />
-                    <Button style={{ borderRadius: 20}} className="submitButton" type="submit" variant="contained">Se connecter</Button>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <TextField required id="outlined-required" label="E-Mail" {...register('email')} />
+                        <TextField required id="outlined-required" label="Mot de passe" {...register('password')} />
+                        <Button style={{ borderRadius: 20 }} className="submitButton" type="submit" variant="contained">Se connecter</Button>
+                    </Box>
                 </div>
             </form>
         </div>
-            )
+    )
 }
 
 export default Login;

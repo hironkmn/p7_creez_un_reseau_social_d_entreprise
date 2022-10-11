@@ -3,10 +3,10 @@ import { slide as Menu } from 'react-burger-menu';
 import './Burger.css';
 import logo from '../../assets/icon-left-font.png'
 
-export default props => {
+function Burger(){
   return (
     <Menu>
-      <a className='menu-item' href='/'></a>
+      <a className='menu-item' href='/'>
         <img src={logo} id='logo'/>
       </a>
       <a className="menu-item" href="/">
@@ -18,3 +18,4 @@ export default props => {
     </Menu>
   );
 };
+export default Burger;

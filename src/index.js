@@ -4,9 +4,10 @@ import './index.css';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home'
+import PrivateRoute from './services/routes/PrivateRoute';
 import reportWebVitals from './reportWebVitals';
 import theme from './services/themes/Theme'
-import { BrowserRouter, Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@mui/material';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,12 +15,14 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/' element={<Login />} />
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/home' element={<Home/>} />
-        </Routes>
+          <Routes>
+            <Route element={<PrivateRoute />}>
+              <Route element={<Home/>} path="/home" exact />
+            </Route>
+            <Route element={<Login/>} path="/" />
+            <Route element={<Login/>} path="/login" />
+            <Route element={<Signup />} path='/signup'/>
+          </Routes>
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>

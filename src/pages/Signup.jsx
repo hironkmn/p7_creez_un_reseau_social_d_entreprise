@@ -20,9 +20,13 @@ function Signup() {
             body: JSON.stringify(d)
         })
 
-        if (response.status == 201) {
-            navigate('/home')
-        }
+        response.json()
+        .then(function (data) {
+            localStorage.setItem('token', data['token'])
+            if (response.status === 200) {
+                navigate('/home')
+            }
+        })
     }
 
     return (
@@ -32,11 +36,11 @@ function Signup() {
                 <li className="tab active"><Link to="/signup">S'inscrire</Link></li>
             </ul>
             <form id="signup" onSubmit={handleSubmit(onSubmit)}>
-                <img src={logo} alt='logo groupomania' />
+                <img src={logo} alt='logo groupomania' id="logo" />
                 <div className="input-field">
                     <Box sx={{display:'flex',flexDirection:'column', gap:3}}>
                         <TextField required id="outlined-required" label="E-Mail" {...register('email')} />
-                        <TextField required id="outlined-required" label="Mot de passe" {...register('password')} />
+                        <TextField required type='password' id="outlined-required" label="Mot de passe" {...register('password')} />
                         <Button style={{ borderRadius: 20 }} className="submitButton" type="submit" variant="contained">S'inscrire</Button>
                     </Box>
                 </div>

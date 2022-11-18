@@ -101,7 +101,7 @@ a {
 	color: inherit;
 }
 
-img {
+#logo {
 	object-fit: cover;
 	width: 92%;
 	height: 80px;

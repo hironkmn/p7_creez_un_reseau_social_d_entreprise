@@ -9,19 +9,30 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import LanguageIcon from '@mui/icons-material/Language';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import { Link } from '@mui/material';
+import { ListItemText } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/avatars-avataaars-sprites';
+import Burger from './Burger'
 
 const settings = ['Profil', 'Se Déconnecter'];
+const jwt = require('jsonwebtoken')
 
-const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const user = jwt.verify(localStorage.getItem('token'), 'RANDOM_TOKEN_SECRET').userId
+  let avatar = createAvatar(style, {
+    seed: user,
+    size: 30,
+    backgroundColor: 'white'
+  })
+
+  const svg = new Blob([avatar], {type: "image/svg+xml"})
+  const url = URL.createObjectURL(svg)
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -29,29 +40,26 @@ const ResponsiveAppBar = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate('/login')
+  }
+
   return (
-    <AppBar position="static">
+    <AppBar  position="fixed">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <LanguageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+        <Toolbar disableGutters sx={{ display:'flex', justifyContent:'space-between'}} >
+        <Burger pageWrapId={'page-wrap'} outerContainerId={'outer-container'} />
+          <Box  sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
           </Box>
-          <LanguageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -81,7 +89,7 @@ const ResponsiveAppBar = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
               >
-                <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                <Avatar src={url} sx={{ width: 40, height: 40 }}></Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -140,11 +148,13 @@ const ResponsiveAppBar = () => {
                     <Avatar /> Profil
                   </MenuItem>
                   <Divider />
-                  <MenuItem component={Link} to='/login'>
+                  <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
                       <Logout fontSize="small" />
                     </ListItemIcon>
-                    Se déconnecter
+                    <ListItemText>
+                      Se déconnecter
+                    </ListItemText>
                   </MenuItem>
                 </Menu>
               ))}

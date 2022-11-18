@@ -5,6 +5,7 @@ require('dotenv').config()
 
 
 const userRoutes = require('./routes/user')
+const postsRoutes = require('./routes/post')
 
 mongoose.connect(`mongodb+srv://mzerrouk:${process.env.PASSWORD}@cluster0.hqtbroj.mongodb.net/?retryWrites=true&w=majority`,
     {
@@ -29,7 +30,10 @@ app.options('/*', (_, res) => {
 })
 
 app.use(express.json())
+app.use(express.urlencoded())
 
+app.use('/api/posts', postsRoutes)
 app.use('/api/auth', userRoutes)
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 module.exports = app

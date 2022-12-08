@@ -1,14 +1,14 @@
 import * as React from 'react'; 
 import Button from '@mui/material/Button';
 import Posts from './Posts';
+import hasRoles from '../../services/security/hasRoles';
 
 
-const pageSize = 10;
+const pageSize = 2;
 
-function Pagination() {
+function Pagination({posts, setPosts}) {
 
     const [pageNumber, setPageNumber] = React.useState(1)
-    const [posts, setPosts] = React.useState([])
     
     React.useEffect(() => {
       async function fetchData() {
@@ -21,8 +21,16 @@ function Pagination() {
         })
         .then((resp) => resp.json())
         .then(function (data){
-          setPosts((posts) => {
-            return [...data, ...posts]
+          console.log(data)
+          let listOfPosts = [...posts]
+          console.log(listOfPosts)
+          for(let newPost of data){
+            if(!listOfPosts.some((p) => p._id === newPost._id)){
+              listOfPosts.push(newPost)
+            }
+          }
+          setPosts(() => {
+            return listOfPosts
           })
         })
       }
@@ -39,7 +47,7 @@ function Pagination() {
       <>
       <div className='all-posts' style={{marginTop:'64px'}}>
         {posts.map((p) => {
-          return <Posts key={p._id} posts={p}/>
+          return <Posts key={p._id} post={p} setPosts={setPosts} hasRoles={hasRoles(p.userId)}/>
         })}
         <Button sx={{margin:'auto', display:'flex', justifyContent:'center', padding:'30px'}} onClick={nextPage}>Afficher plus...</Button>
         </div>

@@ -26,6 +26,7 @@ import Fab from '@mui/material/Fab';
 import { Box } from '@mui/system';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
+import { json } from 'react-router-dom';
 
 
 const jwt = require('jsonwebtoken')
@@ -33,7 +34,7 @@ const jwt = require('jsonwebtoken')
 
 function Posts(props) {
   const [expanded, setExpanded] = React.useState(false);
-  const user = props.posts.userId
+  const user = props.post.userId
   let avatar = createAvatar(style, {
     seed: user,
     size: 30,
@@ -41,6 +42,8 @@ function Posts(props) {
   })
   const [openForm, setOpenForm] = React.useState(false);
   const [openConfirmation, setOpenConfirmation] = React.useState(false);
+
+  const [nbLikes, setNbLikes] = React.useState(props.post.likes);
 
   const handleClickOpenForm = () => {
     setOpenForm(true);
@@ -59,16 +62,36 @@ function Posts(props) {
   };
 
   const handleDelete = () => {
-    let token = jwt.decode(localStorage.getItem('token'))
-    let post = document.getElementById(props.posts._id)
+    let token = localStorage.getItem('token')
+    let post = document.getElementById(props.post._id)
     post.remove()
-    fetch('http://localhost:3000/api/posts?id='+ props.posts._id, {
+    fetch('http://localhost:3000/api/posts/' + props.post._id, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + token
       }
     })
+  }
+
+  const handleLike = (event) => {
+    let token = localStorage.getItem('token')
+    let tokenDecoded = jwt.decode(localStorage.getItem('token'))
+    fetch('http://localhost:3000/api/posts/' + props.post._id + '/like', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify({ userId: tokenDecoded.userId, like: event.target.checked ? 1 : 0 })
+    })
+    if (event.target.checked) {
+      setNbLikes(nbLikes + 1)
+    } else {
+      setNbLikes(nbLikes - 1)
+    }
   }
 
   const { register, handleSubmit } = useForm();
@@ -78,122 +101,129 @@ function Posts(props) {
     formData.append('description', d.description)
     formData.append('image', d.image[0])
     let token = localStorage.getItem('token')
-    let response = await fetch('http://localhost:3000/api/posts', {
-      method: 'POST',
+    let file = d.image[0]
+    var options = { post: { titre: d.titre, description: d.description, image: file }}
+    let response = await fetch('http://localhost:3000/api/posts/' + props.post._id, {
+      method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + token
       },
       body: formData
     })
-    response.json()
+    let post = await response.json()
+    console.log('postOfResponse', post)
+    props.setPosts((posts) => {
+      console.log('update', d.image)
+      let index = posts.findIndex((p) => p._id === post._id)
+      posts.splice(index, 1, post)
+      console.log(posts, post)
+      return posts
+    } )
   }
 
   const svg = new Blob([avatar], { type: "image/svg+xml" })
   const url = URL.createObjectURL(svg)
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
   return (
-    <div id={props.posts._id}>
-    <Card sx={{ maxWidth: '100%' }}>
-      <CardHeader
-        avatar={
-          <Avatar src={url} aria-label="recipe">
-          </Avatar>
-        }
-        title={props.posts.titre}
-        subheader='Octobre'
-      />
-      <CardMedia
-        component="img"
-        height="194"
-        image={props.posts.imageUrl}
-        alt="Paella dish"
-        sx={{objectFit: "contain"}}
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {props.posts.description}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Checkbox aria-label='like button' icon={<FavoriteBorderIcon />} checkedIcon={<FavoriteIcon />} />
-        {props.posts.likes}
-        <IconButton onClick={handleClickOpenForm} dixplay flearia-label="edit button">
-          <EditIcon />
-        </IconButton>
-        <Dialog open={openForm} onClose={handleCloseForm} fullWidth={'lg'}>
-          <DialogTitle>
-            Editez votre post
-          </DialogTitle>
-          <Divider />
-          <DialogContent>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <TextField id="standard-basic" label="Titre" variant="standard" required {...register('titre')} />
-              <TextField
-                id="outlined-multiline-static"
-                label="Texte"
-                multiline
-                rows={4}
-                fullWidth
-                margin='normal'
-                required
-                {...register('description')}
-              />
-              <Box className='form-buttons' sx={{ display: 'flex' }}>
-                <label htmlFor="upload-photo">
-                  <input
-                    style={{ display: "none" }}
-                    id="upload-photo"
-                    name="upload-photo"
-                    type="file"
-                    accept='image/png, image/jpeg'
-                    {...register('image')}
-                  />
-                  <Fab
-                    color="primary"
-                    component="span"
-                    aria-label="add"
-                    variant="circular"
-                  >
-                    <ImageIcon />
-                  </Fab>
-                </label>
-                <Button variant='text' type='submit' onClick={handleCloseForm}>Poster</Button>
-              </Box>
-            </form>
-          </DialogContent>
-        </Dialog>
-        <IconButton onClick={handleClickOpenConfirmation} sx={{ marginLeft: 'auto' }} aria-label='delete button'>
-          <DeleteIcon />
-        </IconButton>
-        <Dialog
-          open={openConfirmation}
-          onClose={handleCloseConfirmation}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Attention !"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Voulez-vous supprimer ce post ?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseConfirmation}>Non</Button>
-            <Button onClick={React.useEffect(() => {handleCloseConfirmation(); handleDelete()})} autoFocus>
-              Oui
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </CardActions>
-    </Card>
-    <Divider />
+    <div id={props.post._id}>
+      <Card sx={{ maxWidth: '100%' }}>
+        <CardHeader
+          avatar={
+            <Avatar src={url} aria-label="recipe">
+            </Avatar>
+          }
+          title={props.post.titre}
+          subheader={props.post.date}
+        />
+        <CardMedia
+          component="img"
+          height="194"
+          image={props.post.imageUrl}
+          alt="Paella dish"
+          sx={{ objectFit: "contain" }}
+        />
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {props.post.description}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <Checkbox onClick={handleLike} checked={nbLikes>0} aria-label='like button' icon={<FavoriteBorderIcon />} checkedIcon={<FavoriteIcon />} />
+          {nbLikes}
+          <IconButton onClick={handleClickOpenForm} flearia-label="edit button">
+            {props.hasRoles && <EditIcon />}
+          </IconButton>
+          <Dialog open={openForm} onClose={handleCloseForm} fullWidth={true}>
+            <DialogTitle>
+              Editez votre post
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <TextField id="standard-basic" label="Titre" variant="standard" defaultValue={props.post.titre} required {...register('titre')} />
+                <TextField
+                  id="outlined-multiline-static"
+                  label="Texte"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  margin='normal'
+                  required
+                  {...register('description')}
+                  defaultValue={props.post.description}
+                />
+                <Box className='form-buttons' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <label htmlFor="upload-photo">
+                    <input
+                      style={{ display: "none" }}
+                      id="upload-photo"
+                      name="upload-photo"
+                      type="file"
+                      accept='image/png, image/jpeg'
+                      {...register('image')}
+                    />
+                    <Fab
+                      color="primary"
+                      component="span"
+                      aria-label="add"
+                      variant="circular"
+                    >
+                      <ImageIcon />
+                    </Fab>
+                  </label>
+                  <Button variant='text' type='submit' onClick={handleCloseForm}>Poster</Button>
+                </Box>
+              </form>
+            </DialogContent>
+          </Dialog>
+          <IconButton onClick={handleClickOpenConfirmation} sx={{ marginLeft: 'auto' }} aria-label='delete button'>
+            {props.hasRoles && <DeleteIcon />}
+          </IconButton>
+          <Dialog
+            open={openConfirmation}
+            onClose={handleCloseConfirmation}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Attention !"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Voulez-vous supprimer ce post ?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseConfirmation}>Non</Button>
+              <Button onClick={() => { handleCloseConfirmation(); handleDelete() }} autoFocus>
+                Oui
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </CardActions>
+      </Card>
+      <Divider />
     </div>
   );
 }

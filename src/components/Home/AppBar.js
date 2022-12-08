@@ -109,7 +109,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <Menu
+                <Menu key={setting}
                   anchorEl={anchorEl}
                   id="account-menu"
                   open={open}

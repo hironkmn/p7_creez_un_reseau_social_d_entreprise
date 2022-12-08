@@ -1,9 +1,15 @@
+const jwt = require('jsonwebtoken')
 
-
-function isAdmin(user){
-    return user.roles.includes("admin")
+function hasRoles(postOfUser){
+    let token = jwt.decode(localStorage.getItem('token'))
+    if(token.role === 'ADMIN'){
+        return true
+    } else {
+        if(postOfUser === token.userId){
+            return true
+        } else {
+            return false
+        }
+    }
 }
-
-function isUser(user){
-    return user.roles.includes("user")
-}
+export default hasRoles

@@ -20,10 +20,18 @@ function Signup() {
             body: JSON.stringify(d)
         })
 
-        response.json()
+        let response2 = await fetch('http://localhost:3000/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(d)
+        })
+        response2.json()
         .then(function (data) {
             localStorage.setItem('token', data['token'])
-            if (response.status === 200) {
+            if (response2.status === 200) {
                 navigate('/home')
             }
         })

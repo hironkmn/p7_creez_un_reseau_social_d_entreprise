@@ -3,7 +3,7 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 
 exports.createPost = (req, res, next) => {
-    const postObject = { titre: req.body.titre, description: req.body.description }
+    const postObject = { titre: req.body.titre, description: req.body.description, date: req.body.date }
     const post = new Post({
         ...postObject,
         userId: req.auth.userId,
@@ -22,21 +22,13 @@ exports.getOnePost = (req, res, next) => {
 }
 
 exports.modifyPost = (req, res, next) => {
-    const postObject = req.file ? {
-        ...JSON.parse(req.body.post),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body }
-
-    delete postObject._userId
-    Post.findOne({ _id: req.query.id })
+    console.log(req.body)
+    const postObject = { titre: req.body.titre, description: req.body.description, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}
+    Post.findOne({ _id: req.params.id })
         .then((post) => {
-            if (post.userId != req.auth.userId) {
-                res.status(401).json({ message: 'Not authorized' })
-            } else {
                 Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Objet modifié!' }))
+                    .then(() => res.status(200).json({ ...postObject, _id: req.params.id }))
                     .catch(error => res.status(500).json({ error }))
-            }
         })
         .catch((error) => {
             res.status(500).json({ error })
@@ -44,18 +36,14 @@ exports.modifyPost = (req, res, next) => {
 }
 
 exports.deletePost = (req, res, next) => {
-    Post.findOne({ _id: req.query.id })
+    Post.findOne({ _id: req.params.id })
         .then(post => {
-            if (post.userId != req.auth.userId) {
-                res.status(401).json({ message: 'Not authorized' })
-            } else {
                 const filename = post.imageUrl.split('/images/')[1]
                 fs.unlink(`images/${filename}`, () => {
                     Post.deleteOne({ _id: req.params.id })
                         .then(() => { res.status(200).json({ message: 'Objet supprimé !' }) })
                         .catch(error => res.status(500).json({ error }))
                 })
-            }
         })
         .catch(error => {
             res.status(500).json({ error })
@@ -66,6 +54,7 @@ exports.getSomePosts = (req, res, next) => {
     const pageNumber = req.query.pageNumber
     const pageSize = req.query.pageSize
     Post.find()
+        .sort({date: -1})
         .skip((pageNumber-1)*pageSize)
         .limit(pageSize)
         .then(posts => res.status(200).json(posts))

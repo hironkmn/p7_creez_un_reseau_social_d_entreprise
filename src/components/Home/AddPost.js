@@ -11,7 +11,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import { Box } from '@mui/system';
 import { useForm } from "react-hook-form";
 
-export default function FormDialog() {
+export default function FormDialog({onNewPost}) {
 
     const [open, setOpen] = React.useState(false);
 
@@ -25,11 +25,12 @@ export default function FormDialog() {
 
     const { register, handleSubmit } = useForm();
     const onSubmit = async (d) => {
-        console.log(d)
         const formData = new FormData()
+        let date = new Date(Date.now()).toLocaleString('fr-FR', { timeZone: 'UTC' });
         formData.append('titre', d.titre)
         formData.append('description', d.description)
         formData.append('image',d.image[0] )
+        formData.append('date', date)
         let token = localStorage.getItem('token')
         let response = await fetch('http://localhost:3000/api/posts', {
             method: 'POST',
@@ -39,14 +40,17 @@ export default function FormDialog() {
             },
             body: formData
         })
-        response.json()
+        if(response.status === 201){
+            onNewPost()
+            window.location.reload()
+        }
     }
     return (
         <div>
             <Fab color="primary" aria-label="add" onClick={handleClickOpen} sx={{ position: 'fixed', bottom: 12, right: 12 }}>
                 <AddIcon />
             </Fab>
-            <Dialog open={open} onClose={handleClose} fullWidth={'lg'}>
+            <Dialog open={open} onClose={handleClose} fullWidth={true}>
                 <DialogTitle>
                     Racontez ce que vous voulez...
                 </DialogTitle>

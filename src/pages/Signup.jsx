@@ -11,7 +11,7 @@ function Signup() {
     const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const onSubmit = async (d) => {
-        let response = await fetch('http://localhost:3000/api/auth/signup', {
+        await fetch(process.env.REACT_APP_SIGNUP_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ function Signup() {
             body: JSON.stringify(d)
         })
 
-        let response2 = await fetch('http://localhost:3000/api/auth/login', {
+        let response2 = await fetch(process.env.REACT_APP_LOGIN_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ function Home() {
     const [posts, setPosts] = React.useState([])
     async function fetchData() {
         let token = localStorage.getItem('token')
-        let newPosts = await fetch("http://localhost:3000/api/posts?pageNumber=" + 1 + "&pageSize=" + 2, {
+        await fetch(process.env.REACT_APP_POSTS_URL + "?pageNumber=" + 1 + "&pageSize=" + 2, {
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token

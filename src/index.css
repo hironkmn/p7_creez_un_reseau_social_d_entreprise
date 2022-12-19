@@ -4,15 +4,13 @@ body {
   color: #4E5166;
   background-color: whitesmoke;
   height: 100%;
+  overflow-y: hidden;
 }
 
 html {
   height: 100%;
 }
 
-#root {
-  height: 100%;
-}
 
 ::-webkit-scrollbar-track
 {

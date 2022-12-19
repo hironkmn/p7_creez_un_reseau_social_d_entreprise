@@ -23,7 +23,7 @@ const jwt = require('jsonwebtoken')
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const user = jwt.verify(localStorage.getItem('token'), 'RANDOM_TOKEN_SECRET').userId
+  const user = jwt.decode(localStorage.getItem('token')).userId
   let avatar = createAvatar(style, {
     seed: user,
     size: 30,
@@ -49,13 +49,15 @@ function ResponsiveAppBar() {
   };
 
   const handleLogout = () => {
+    let body = document.querySelector('body')
+    body.style.overflowY = 'hidden'
     localStorage.clear()
     navigate('/login')
   }
 
   return (
-    <AppBar  position="fixed">
-      <Container maxWidth="xl">
+    <AppBar position="fixed">
+      <Container maxWidth= 'false'>
         <Toolbar disableGutters sx={{ display:'flex', justifyContent:'space-between'}} >
         <Burger pageWrapId={'page-wrap'} outerContainerId={'outer-container'} />
           <Box  sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>

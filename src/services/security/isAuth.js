@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 function isAuth() {
+  let body = document.querySelector('body')
   if (jwt.decode(localStorage.getItem('token')) == null) {
     console.log("Non connecté")
     return false
@@ -12,6 +13,7 @@ function isAuth() {
       return false
     } else {
       console.log("Token valide")
+      body.style.overflowY= 'scroll'
       return true
     }
   }

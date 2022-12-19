@@ -26,14 +26,13 @@ import Fab from '@mui/material/Fab';
 import { Box } from '@mui/system';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
-import { json } from 'react-router-dom';
+require('dotenv').config()
 
 
 const jwt = require('jsonwebtoken')
 
 
 function Posts(props) {
-  const [expanded, setExpanded] = React.useState(false);
   const user = props.post.userId
   let avatar = createAvatar(style, {
     seed: user,
@@ -65,7 +64,7 @@ function Posts(props) {
     let token = localStorage.getItem('token')
     let post = document.getElementById(props.post._id)
     post.remove()
-    fetch('http://localhost:3000/api/posts/' + props.post._id, {
+    fetch(process.env.REACT_APP_POSTS_URL + props.post._id, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -77,7 +76,7 @@ function Posts(props) {
   const handleLike = (event) => {
     let token = localStorage.getItem('token')
     let tokenDecoded = jwt.decode(localStorage.getItem('token'))
-    fetch('http://localhost:3000/api/posts/' + props.post._id + '/like', {
+    fetch(process.env.REACT_APP_POSTS_URL + props.post._id + '/like', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -101,9 +100,7 @@ function Posts(props) {
     formData.append('description', d.description)
     formData.append('image', d.image[0])
     let token = localStorage.getItem('token')
-    let file = d.image[0]
-    var options = { post: { titre: d.titre, description: d.description, image: file }}
-    let response = await fetch('http://localhost:3000/api/posts/' + props.post._id, {
+    let response = await fetch(process.env.REACT_APP_POSTS_URL + props.post._id, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -112,14 +109,12 @@ function Posts(props) {
       body: formData
     })
     let post = await response.json()
-    console.log('postOfResponse', post)
     props.setPosts((posts) => {
-      console.log('update', d.image)
       let index = posts.findIndex((p) => p._id === post._id)
       posts.splice(index, 1, post)
-      console.log(posts, post)
       return posts
     } )
+    window.location.reload()
   }
 
   const svg = new Blob([avatar], { type: "image/svg+xml" })

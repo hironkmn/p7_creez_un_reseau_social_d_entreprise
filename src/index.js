@@ -9,6 +9,9 @@ import reportWebVitals from './reportWebVitals';
 import theme from './services/themes/Theme'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@mui/material';
+// import dotenv from 'dotenv'
+
+// dotenv.config()
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -10,6 +10,8 @@ import Divider from '@mui/material/Divider';
 import ImageIcon from '@mui/icons-material/Image';
 import { Box } from '@mui/system';
 import { useForm } from "react-hook-form";
+require('dotenv').config()
+
 
 export default function FormDialog({onNewPost}) {
 
@@ -32,7 +34,7 @@ export default function FormDialog({onNewPost}) {
         formData.append('image',d.image[0] )
         formData.append('date', date)
         let token = localStorage.getItem('token')
-        let response = await fetch('http://localhost:3000/api/posts', {
+        let response = await fetch(process.env.REACT_APP_POSTS_URL, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

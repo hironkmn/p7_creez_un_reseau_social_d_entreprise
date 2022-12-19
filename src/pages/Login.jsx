@@ -11,7 +11,7 @@ function Login() {
     const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const onSubmit = async (d) => {
-        let response = await fetch('http://localhost:3000/api/auth/login', {
+        let response = await fetch(process.env.REACT_APP_LOGIN_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,8 +37,8 @@ function Login() {
                 <img src={logo} alt='logo groupomania' id="logo" />
                 <div className="input-field">
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        <TextField required id="outlined-required" label="E-Mail" {...register('email')} />
-                        <TextField required type='password' id="outlined-required" label="Mot de passe" {...register('password')} />
+                        <TextField required className="outlined-required" label="E-Mail" {...register('email')} />
+                        <TextField required type='password' className="outlined-required" label="Mot de passe" {...register('password')} />
                         <Button style={{ borderRadius: 20 }} className="submitButton" type="submit" variant="contained">Se connecter</Button>
                     </Box>
                 </div>

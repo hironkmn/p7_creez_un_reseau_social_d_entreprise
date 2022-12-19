@@ -9,11 +9,12 @@ const pageSize = 2;
 function Pagination({posts, setPosts}) {
 
     const [pageNumber, setPageNumber] = React.useState(1)
+    const [shouldDisplayMore, setDisplayMore] = React.useState(true)
     
     React.useEffect(() => {
       async function fetchData() {
         let token = localStorage.getItem('token')
-        let newPosts = await fetch("http://localhost:3000/api/posts?pageNumber=" + pageNumber + "&pageSize=" + pageSize, {
+        await fetch(process.env.REACT_APP_POSTS_URL + '?pageNumber=' + pageNumber + "&pageSize=" + pageSize, {
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -22,6 +23,9 @@ function Pagination({posts, setPosts}) {
         .then((resp) => resp.json())
         .then(function (data){
           console.log(data)
+          if(data.length === 0) {
+            setDisplayMore(false)
+          }
           let listOfPosts = [...posts]
           console.log(listOfPosts)
           for(let newPost of data){
@@ -49,7 +53,7 @@ function Pagination({posts, setPosts}) {
         {posts.map((p) => {
           return <Posts key={p._id} post={p} setPosts={setPosts} hasRoles={hasRoles(p.userId)}/>
         })}
-        <Button sx={{margin:'auto', display:'flex', justifyContent:'center', padding:'30px'}} onClick={nextPage}>Afficher plus...</Button>
+        {shouldDisplayMore && <Button sx={{margin:'auto', display:'flex', justifyContent:'center', padding:'30px'}} onClick={nextPage}>Afficher plus...</Button>}
         </div>
       </>
     );

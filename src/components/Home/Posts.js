@@ -64,7 +64,7 @@ function Posts(props) {
     let token = localStorage.getItem('token')
     let post = document.getElementById(props.post._id)
     post.remove()
-    fetch(process.env.REACT_APP_POSTS_URL + props.post._id, {
+    fetch(process.env.REACT_APP_POSTS_URL +'/' + props.post._id, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -76,7 +76,7 @@ function Posts(props) {
   const handleLike = (event) => {
     let token = localStorage.getItem('token')
     let tokenDecoded = jwt.decode(localStorage.getItem('token'))
-    fetch(process.env.REACT_APP_POSTS_URL + props.post._id + '/like', {
+    fetch(process.env.REACT_APP_POSTS_URL + '/' + props.post._id + '/like', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -100,7 +100,7 @@ function Posts(props) {
     formData.append('description', d.description)
     formData.append('image', d.image[0])
     let token = localStorage.getItem('token')
-    let response = await fetch(process.env.REACT_APP_POSTS_URL + props.post._id, {
+    let response = await fetch(process.env.REACT_APP_POSTS_URL + '/' + props.post._id, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
